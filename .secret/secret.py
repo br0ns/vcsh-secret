@@ -55,12 +55,14 @@ def save():
         path = expand_path(line)
         run('tar f secret.tar -upP --add-file="%s"' % path)
     encrypt()
-    run('vcsh secret add secret.tar.gpg')
-    run('vcsh secret commit -m "secret"')
-    run('vcsh secret push')
+    user = os.environ.get('SUDO_USER')
+    run('su %s -c "vcsh secret add secret.tar.gpg"' % user)
+    run('su %s -c "vcsh secret commit -m secret"' % user)
+    run('su %s -c "vcsh secret push"' % user)
 
 def restore():
-    run('vcsh secret pull')
+    user = os.environ.get('SUDO_USER')
+    run('su %s -c "vcsh secret pull"' % user)
     decrypt()
     run('tar f secret.tar -xpP --overwrite')
     shred('secret.tar')
