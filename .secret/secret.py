@@ -53,6 +53,7 @@ def save():
         if not line or line[0] == '#':
             continue
         path = expand_path(line)
+        print 'Saving: %s' % path
         run('tar f secret.tar -upP --add-file="%s"' % path)
     encrypt()
     user = os.environ.get('SUDO_USER')
