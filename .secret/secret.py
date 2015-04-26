@@ -48,13 +48,16 @@ def save():
     maybe_extract_list()
     shred('secret.tar')
     # run('touch secret.tar')
-    for line in open('secret.lst') + [expand_path('~/.secret/secret.lst')]:
+    def add(path):
+        path = expand_path(path)
+        print 'Saving: %s' % path
+        run('tar f secret.tar -upP --add-file="%s"' % path)
+    for line in open('secret.lst'):
         line = line.strip()
         if not line or line[0] == '#':
             continue
-        path = expand_path(line)
-        print 'Saving: %s' % path
-        run('tar f secret.tar -upP --add-file="%s"' % path)
+        add(line)
+    add('~/.secret/secret.lst')
     encrypt()
     user = os.environ.get('SUDO_USER')
     run('su %s -c "vcsh secret add secret.tar.gpg"' % user)
