@@ -48,7 +48,7 @@ def save():
     maybe_extract_list()
     shred('secret.tar')
     # run('touch secret.tar')
-    for line in open('secret.lst'):
+    for line in open('secret.lst') + [expand_path('~/.secret/secret.lst')]:
         line = line.strip()
         if not line or line[0] == '#':
             continue
