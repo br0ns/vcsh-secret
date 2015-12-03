@@ -76,7 +76,10 @@ if __name__ == '__main__':
         print >>sys.stderr, 'usage: %s save|restore' % sys.argv[0]
         sys.exit(0)
     if os.getuid() != 0:
-        os.execlp("sudo", "sudo", "python", *sys.argv)
+        os.execlp('sudo', 'sudo',
+                  'SSH_AUTH_SOCK=%s' % os.getenv('SSH_AUTH_SOCK', ''),
+                  sys.executable,
+                  *sys.argv)
     os.chdir(os.path.dirname(__file__))
     if sys.argv[1] == 'save':
         save()
