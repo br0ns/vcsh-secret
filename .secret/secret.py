@@ -43,6 +43,7 @@ def maybe_extract_list():
         print 'Extracting: secret.lst'
         decrypt()
         run('tar f secret.tar -xpP "%s"' % expand_path('~/.secret/secret.lst'))
+        run('chown %s: secret.tar.gpg' % os.environ.get('SUDO_USER'))
 
 def save():
     maybe_extract_list()
