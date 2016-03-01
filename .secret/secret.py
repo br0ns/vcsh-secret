@@ -1,5 +1,5 @@
 #!/usr/bin/env python2.7
-import os, sys
+import os, sys, pty
 
 def run(cmd):
     retval = os.system(cmd)
@@ -7,6 +7,18 @@ def run(cmd):
     if retval != 0:
         print "Failure running", cmd
         sys.exit(retval)
+
+def gpg(*args):
+    argv = ['gpg'] + list(args)
+    for n in xrange(3):
+        pty.spawn(argv)
+        pid, status = os.wait()
+        status = os.WEXITSTATUS(status)
+        if status == 0:
+            break
+    else:
+        print 'Failure running', ' '.join(argv)
+        sys.exit(status)
 
 def expand_path(path):
     sudo_user = os.environ.get('SUDO_USER', '')
@@ -29,13 +41,13 @@ def decrypt():
     exist('secret.tar.gpg')
     shred('secret.tar')
     print 'Decrypting: secret.tar <- secret.tar.gpg'
-    run('gpg --yes secret.tar.gpg')
+    gpg('--yes', 'secret.tar.gpg')
 
 def encrypt():
     exist('secret.tar')
     shred('secret.tar.gpg')
     print 'Encrypting: secret.tar -> secret.tar.gpg'
-    run('gpg -c secret.tar')
+    gpg('-c', 'secret.tar')
     shred('secret.tar')
 
 def maybe_extract_list():
