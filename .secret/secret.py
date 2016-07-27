@@ -64,7 +64,7 @@ def save():
     def add(path):
         path = expand_path(path)
         print 'Saving: %s' % path
-        run('tar f secret.tar -upP --add-file="%s"' % path)
+        run('tar f secret.tar -upP -- "%s"' % path)
     for line in open('secret.lst'):
         line = line.strip()
         if not line or line[0] == '#':
