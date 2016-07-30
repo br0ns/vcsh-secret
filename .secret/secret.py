@@ -81,7 +81,7 @@ def restore():
     user = os.environ.get('SUDO_USER')
     run('su %s -c "vcsh secret pull"' % user)
     decrypt()
-    run('tar f secret.tar -xpPv --overwrite --overwrite-dir')
+    run('tar f secret.tar -xpPv --overwrite')
     shred('secret.tar')
 
 if __name__ == '__main__':
